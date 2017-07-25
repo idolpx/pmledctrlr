@@ -4,9 +4,9 @@
  *  Hold button for 1000ms to cycle through states
  *  Onboard LED blinks to indicate selected state
  *
- *  State 1: LED Animation
- *      click           = Next LED Animation
- *      double_click    = Previous LED Animation
+ *  State 1: LED Effect
+ *      click           = Next LED Effect
+ *      double_click    = Previous LED Effect
  *
  *  State 2: Brightness
  *      click           = Increase Brightness
@@ -74,22 +74,22 @@ void _SerialPrintf(const char *fmt, ...)
 #define CONFIG_START 0
 #define CONFIG_SAVE_TRIGGER 5000
 
-#define CONFIG_MODE 0
+#define CONFIG_EFFECT 0
 #define CONFIG_BRIGHTNESS 1
 #define CONFIG_SPEED 2
 #define CONFIG_COLOR 3
 #define CONFIG_LED_ADD 4
 #define CONFIG_LED_DEL 5
 
-char *stateName[] = { "mode", "brightness",  "speed", "color", "led_add", "led_del"};
+char *stateName[] = { "effect", "brightness",  "speed", "color", "led_add", "led_del"};
 
-int state = CONFIG_MODE;
+int state = CONFIG_EFFECT;
 bool event_triggered = true;
 int event_blink = 0;
 
 struct objConfig {
     char version[5];
-    int mode;
+    int effect;
     int brightness;
     int speed;
     uint8_t color;
@@ -135,7 +135,7 @@ void setup(){
 
     Serial.println("WS2812FX setup");
     ws2812fx.init();
-    ws2812fx.setMode(config.mode);
+    ws2812fx.setMode(config.effect);
     ws2812fx.setBrightness(config.brightness);
     ws2812fx.setSpeed(config.speed);
     ws2812fx.setColor(config.color);
@@ -153,12 +153,12 @@ void loop() {
 
     // report event
     if ( event_triggered ) {
-        config.mode = ws2812fx.getMode();
-        SerialPrintf("state: %d, [%s]\tmode: %d, [%s]\tpressed_ticks: %d\n",
+        config.effect = ws2812fx.getMode();
+        SerialPrintf("state: %d, [%s]\teffect: %d, [%s]\tpressed_ticks: %d\n",
                         state,
                         stateName[state],
-                        config.mode,
-                        ws2812fx.getModeName(config.mode),
+                        config.effect,
+                        ws2812fx.getModeName(config.effect),
                         button.getPressedTicks()
                     );
 
@@ -216,7 +216,7 @@ void loadSettings() {
         for (unsigned int t=0; t<sizeof(config); t++)
             *((char*)&config + t) = EEPROM.read(CONFIG_START + t);
 
-        ws2812fx.setMode(config.mode);
+        ws2812fx.setMode(config.effect);
         ws2812fx.setBrightness(config.brightness);
         ws2812fx.setSpeed(config.speed);
         ws2812fx.setColor(ws2812fx.color_wheel(config.color));
@@ -252,7 +252,7 @@ void myLongPressStopFunction() {
 
 // this function will be called when the button is pressed 1 time and them some time has passed.
 void myClickFunction() {
-    if ( state == CONFIG_MODE )
+    if ( state == CONFIG_EFFECT )
     {
         // Increase Animation Mode
         ws2812fx.setMode((ws2812fx.getMode() + 1) % ws2812fx.getModeCount());
@@ -296,7 +296,7 @@ void myClickFunction() {
 
 // this function will be called when the button is pressed 2 times in a short timeframe.
 void myDoubleClickFunction() {
-    if ( state == CONFIG_MODE )
+    if ( state == CONFIG_EFFECT )
     {
         // Decrease Animation Mode
         ws2812fx.setMode((ws2812fx.getMode() - 1) % ws2812fx.getModeCount());
