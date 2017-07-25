@@ -1,7 +1,7 @@
 ### pmledctrlr
 # Arduino Pro Mini LED Controller
 
-I needed a small LED controller for lighting up a project.  I designed this to have a simple single button control interface.
+I needed a small LED controller for lighting up a project.  I designed this to have a simple single button configuration interface.
 
 ```
 /*
@@ -42,11 +42,13 @@ I needed a small LED controller for lighting up a project.  I designed this to h
  
  ## Parts List
  
- * [Arduino Pro Mini 5V 16Mhz](https://www.aliexpress.com/wholesale?SearchText=Arduino+Pro+Mini+5V+16Mhz)
- * [6x6x5MM 4PIN G90 Tactile Tact Push Button Micro Switch](https://www.aliexpress.com/wholesale?SearchText=6x6x5MM+4PIN+G90+Tactile+Push+Button+Micro+Switch)
- * [WS2812b LED Strip](https://www.aliexpress.com/wholesale?SearchText=WS2812b+LED+Strip)
- * [18650 Battery](https://www.aliexpress.com/wholesale?SearchText=18650+Battery)x2
- * [18650 Single Battery Holder with Wire Leads](https://www.aliexpress.com/wholesale?SearchText=18650+Single+Battery+Holder+Wire)x2
- * [8.5mm x 8.5mm Push Tactile Power Micro Switch](https://www.aliexpress.com/wholesale?SearchText=8.5mm+push+on+push+off+switch+tactile+power+micro)
+ Qty|Part
+ ---|----
+ 1|[Arduino Pro Mini 5V 16Mhz](https://www.aliexpress.com/wholesale?SearchText=Arduino+Pro+Mini+5V+16Mhz)
+ 1|[WS2812b LED Strip](https://www.aliexpress.com/wholesale?SearchText=WS2812b+LED+Strip)
+ 2|[18650 Battery](https://www.aliexpress.com/wholesale?SearchText=18650+Battery)
+ 2|[18650 Single Battery Holder with Wire Leads](https://www.aliexpress.com/wholesale?SearchText=18650+Single+Battery+Holder+Wire)
+  1|[6x6x5MM 4PIN G90 Tactile Tact Push Button Micro Switch](https://www.aliexpress.com/wholesale?SearchText=6x6x5MM+4PIN+G90+Tactile+Push+Button+Micro+Switch) (Configuration Switch)
+ 1|[8.5mm x 8.5mm Tactile Power Micro Switch Self Lock On/Off](https://www.aliexpress.com/wholesale?SearchText=8.5mm+push+on+push+off+switch+tactile+power+micro) (Power Switch)
  
  
