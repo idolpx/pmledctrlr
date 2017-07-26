@@ -270,7 +270,7 @@ void myClickFunction() {
         uint32_t color_code;
 
         // Increase Color
-        config.color = config.color + 20;
+        config.color = config.color + 10;
         color_code = ws2812fx.color_wheel(config.color);
         ws2812fx.setColor(color_code);
     }

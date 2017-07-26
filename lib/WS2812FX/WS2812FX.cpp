@@ -168,7 +168,12 @@ void WS2812FX::increaseLength(uint16_t s) {
 void WS2812FX::decreaseLength(uint16_t s) {
   if (s > _led_count) s = 1;
   s = _led_count - s;
-  strip_off();
+
+  for(uint16_t i=s; i < _led_count; i++) {
+    Adafruit_NeoPixel::setPixelColor(i, 0);
+  }
+  Adafruit_NeoPixel::show();
+
   setLength(s);
 }
 
@@ -1228,6 +1233,10 @@ void WS2812FX::mode_fire_flicker(void) {
  */
 void WS2812FX::mode_fire_flicker_soft(void) {
    mode_fire_flicker_int(6);
+}
+
+void WS2812FX::mode_fire_flicker_intense(void) {
+   mode_fire_flicker_int(1.7);
 }
 
 void WS2812FX::mode_fire_flicker_int(int rev_intensity)
