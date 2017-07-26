@@ -4,9 +4,9 @@
  *  Hold button for 1000ms to cycle through states
  *  Onboard LED blinks to indicate selected state
  *
- *  State 1: LED Animation
- *      click           = Next LED Animation
- *      double_click    = Previous LED Animation
+ *  State 1: LED Effect
+ *      click           = Next LED Effect
+ *      double_click    = Previous LED Effect
  *
  *  State 2: Brightness
  *      click           = Increase Brightness
@@ -20,11 +20,11 @@
  *      click           = Increment Color + 20
  *      double_click    = Decrement Color - 1
  *
- *  State 5: Add LED
+ *  State 5: Length Add
  *      click           = Add 1 LED
  *      double_click    = Add 10 LEDs
  *
- *  State 6: Delete LED
+ *  State 6: Length Delete
  *      click           = Delete 1 LED
  *      double_click    = Delete 10 LED
  *
@@ -70,30 +70,30 @@ void _SerialPrintf(const char *fmt, ...)
 #define SPEED_STEP 10                   // in/decrease brightness by this amount per click
 #define COUNT_STEP 10
 
-#define CONFIG_VERSION "1.00"
+#define CONFIG_VERSION "1.01"
 #define CONFIG_START 0
 #define CONFIG_SAVE_TRIGGER 5000
 
-#define CONFIG_MODE 0
+#define CONFIG_EFFECT 0
 #define CONFIG_BRIGHTNESS 1
 #define CONFIG_SPEED 2
 #define CONFIG_COLOR 3
 #define CONFIG_LED_ADD 4
 #define CONFIG_LED_DEL 5
 
-char *stateName[] = { "mode", "brightness",  "speed", "color", "led_add", "led_del"};
+char *stateName[] = { "effect", "brightness",  "speed", "color", "length_add", "length_sub"};
 
-int state = CONFIG_MODE;
+int state = CONFIG_EFFECT;
 bool event_triggered = true;
 int event_blink = 0;
 
 struct objConfig {
     char version[5];
-    int mode;
+    int effect;
     int brightness;
     int speed;
     uint8_t color;
-    int led_count;
+    int length;
 } config = {
     CONFIG_VERSION,
     FX_MODE_RAINBOW_CYCLE,
@@ -106,13 +106,15 @@ struct objConfig {
 // Setup a new OneButton on pin A1.
 OneButton button(A1, true);
 
-WS2812FX ws2812fx = WS2812FX(config.led_count, LED_PIN, NEO_GRB + NEO_KHZ800);
+WS2812FX ws2812fx = WS2812FX(config.length, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 void setup(){
     Serial.begin(115200);
     Serial.println();
     Serial.println();
-    Serial.println("Starting...");
+
+    loadSettings();
+    SerialPrintf("PMLEDCTRLR v%s\n", config.version);
 
     Serial.println("Controls setup");
     // enable the standard led on pin 13.
@@ -131,11 +133,9 @@ void setup(){
     // set 80 msec. debouncing time. Default is 50 msec.
     button.setDebounceTicks(80);
 
-    loadSettings();
-
     Serial.println("WS2812FX setup");
     ws2812fx.init();
-    ws2812fx.setMode(config.mode);
+    ws2812fx.setMode(config.effect);
     ws2812fx.setBrightness(config.brightness);
     ws2812fx.setSpeed(config.speed);
     ws2812fx.setColor(config.color);
@@ -153,24 +153,24 @@ void loop() {
 
     // report event
     if ( event_triggered ) {
-        config.mode = ws2812fx.getMode();
-        SerialPrintf("state: %d, [%s]\tmode: %d, [%s]\tpressed_ticks: %d\n",
+        config.effect = ws2812fx.getMode();
+        SerialPrintf("state: %d, [%s]\teffect: %d, [%s]\tpressed_ticks: %d\n",
                         state,
                         stateName[state],
-                        config.mode,
-                        ws2812fx.getModeName(config.mode),
+                        config.effect,
+                        ws2812fx.getModeName(config.effect),
                         button.getPressedTicks()
                     );
 
         config.brightness = ws2812fx.getBrightness();
         config.speed = ws2812fx.getSpeed();
-        config.led_count = ws2812fx.getLEDCount();
+        config.length = ws2812fx.getLEDCount();
 
-        SerialPrintf("brightness: %d, speed: %d, color: %d, led_count: %d\n\n",
+        SerialPrintf("brightness: %d, speed: %d, color: %d, length: %d\n\n",
                         config.brightness,
                         config.speed,
                         config.color,
-                        config.led_count
+                        config.length
                     );
 
         event_triggered = false;
@@ -211,16 +211,14 @@ void loadSettings() {
         EEPROM.read(CONFIG_START + 2) == CONFIG_VERSION[2] &&
         EEPROM.read(CONFIG_START + 3) == CONFIG_VERSION[3]) {
 
-        SerialPrintf("event: load_settings\n");
-
         for (unsigned int t=0; t<sizeof(config); t++)
             *((char*)&config + t) = EEPROM.read(CONFIG_START + t);
 
-        ws2812fx.setMode(config.mode);
+        ws2812fx.setMode(config.effect);
         ws2812fx.setBrightness(config.brightness);
         ws2812fx.setSpeed(config.speed);
         ws2812fx.setColor(ws2812fx.color_wheel(config.color));
-        ws2812fx.setLEDCount(config.led_count);
+        ws2812fx.setLength(config.length);
     }
 
 }
@@ -252,7 +250,7 @@ void myLongPressStopFunction() {
 
 // this function will be called when the button is pressed 1 time and them some time has passed.
 void myClickFunction() {
-    if ( state == CONFIG_MODE )
+    if ( state == CONFIG_EFFECT )
     {
         // Increase Animation Mode
         ws2812fx.setMode((ws2812fx.getMode() + 1) % ws2812fx.getModeCount());
@@ -280,13 +278,13 @@ void myClickFunction() {
     }
     else if ( state == CONFIG_LED_ADD )
     {
-        // Increase LED Count
-        ws2812fx.increaseLEDCount(1);
+        // Increase Length
+        ws2812fx.increaseLength(1);
     }
     else if ( state == CONFIG_LED_DEL )
     {
-        // Decrease LED Count
-        ws2812fx.decreaseLEDCount(1);
+        // Decrease Length
+        ws2812fx.decreaseLength(1);
     }
 
     SerialPrintf("event: click\n");
@@ -296,7 +294,7 @@ void myClickFunction() {
 
 // this function will be called when the button is pressed 2 times in a short timeframe.
 void myDoubleClickFunction() {
-    if ( state == CONFIG_MODE )
+    if ( state == CONFIG_EFFECT )
     {
         // Decrease Animation Mode
         ws2812fx.setMode((ws2812fx.getMode() - 1) % ws2812fx.getModeCount());
@@ -324,13 +322,13 @@ void myDoubleClickFunction() {
     }
     else if ( state == CONFIG_LED_ADD )
     {
-        // Increase LED Count + 10
-        ws2812fx.increaseLEDCount(COUNT_STEP);
+        // Increase Length + 10
+        ws2812fx.increaseLength(COUNT_STEP);
     }
     else if ( state == CONFIG_LED_DEL )
     {
-        // Decrease LED Count + 10
-        ws2812fx.decreaseLEDCount(COUNT_STEP);
+        // Decrease Length + 10
+        ws2812fx.decreaseLength(COUNT_STEP);
     }
 
     SerialPrintf("event: double_click\n");
