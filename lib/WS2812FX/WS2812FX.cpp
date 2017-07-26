@@ -148,19 +148,27 @@ void WS2812FX::decreaseBrightness(uint8_t s) {
   setBrightness(s);
 }
 
-void WS2812FX::setLength(uint8_t b) {
-  _led_count = b;
+void WS2812FX::setLength(uint16_t b) {
+  if (b < 1) b = 1;
 
-  Adafruit_NeoPixel::updateLength(b);
+  // Decrease numLEDs to maximum available memory
+  do {
+      Adafruit_NeoPixel::updateLength(b);
+      b--;
+  } while(!Adafruit_NeoPixel::numLEDs && b > 1);
+
+  _led_count = Adafruit_NeoPixel::numLEDs;
 }
 
-void WS2812FX::increaseLength(uint8_t s) {
+void WS2812FX::increaseLength(uint16_t s) {
   s = _led_count + s;
   setLength(s);
 }
 
-void WS2812FX::decreaseLength(uint8_t s) {
+void WS2812FX::decreaseLength(uint16_t s) {
+  if (s > _led_count) s = 1;
   s = _led_count - s;
+  strip_off();
   setLength(s);
 }
 

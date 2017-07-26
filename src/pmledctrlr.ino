@@ -70,7 +70,7 @@ void _SerialPrintf(const char *fmt, ...)
 #define SPEED_STEP 10                   // in/decrease brightness by this amount per click
 #define COUNT_STEP 10
 
-#define CONFIG_VERSION "1.01"
+#define CONFIG_VERSION "1.03"
 #define CONFIG_START 0
 #define CONFIG_SAVE_TRIGGER 5000
 
@@ -93,11 +93,11 @@ struct objConfig {
     int brightness;
     int speed;
     uint8_t color;
-    int length;
+    uint16_t length;
 } config = {
     CONFIG_VERSION,
-    FX_MODE_RAINBOW_CYCLE,
-    200,
+    FX_MODE_STATIC,
+    127,
     200,
     200,
     25
@@ -155,7 +155,7 @@ void loop() {
     if ( event_triggered ) {
         config.effect = ws2812fx.getMode();
         SerialPrintf("state: %d, [%s]\teffect: %d, [%s]\tpressed_ticks: %d\n",
-                        state,
+                        state+1,
                         stateName[state],
                         config.effect,
                         ws2812fx.getModeName(config.effect),
@@ -271,8 +271,6 @@ void myClickFunction() {
 
         // Increase Color
         config.color = config.color + 20;
-        if ( config.color > 255 )
-            config.color = 0;
         color_code = ws2812fx.color_wheel(config.color);
         ws2812fx.setColor(color_code);
     }
@@ -315,8 +313,6 @@ void myDoubleClickFunction() {
 
         // Decrease Color
         config.color--;
-        if ( config.color < 0 )
-            config.color = 255;
         color_code = ws2812fx.color_wheel(config.color);
         ws2812fx.setColor(color_code);
     }

@@ -248,9 +248,9 @@ class WS2812FX : public Adafruit_NeoPixel {
       setBrightness(uint8_t b),
       increaseBrightness(uint8_t s),
       decreaseBrightness(uint8_t s),
-      setLength(uint8_t b),
-      increaseLength(uint8_t s),
-      decreaseLength(uint8_t s),
+      setLength(uint16_t b),
+      increaseLength(uint16_t s),
+      decreaseLength(uint16_t s),
       trigger(void);
 
     boolean
