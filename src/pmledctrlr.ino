@@ -78,10 +78,10 @@ void _SerialPrintf(const char *fmt, ...)
 #define CONFIG_BRIGHTNESS 1
 #define CONFIG_SPEED 2
 #define CONFIG_COLOR 3
-#define CONFIG_LED_ADD 4
-#define CONFIG_LED_DEL 5
+#define CONFIG_LENGTH_ADD 4
+#define CONFIG_LENGTH_DEL 5
 
-char *stateName[] = { "effect", "brightness",  "speed", "color", "length_add", "length_sub"};
+char *stateName[] = { "effect", "brightness",  "speed", "color", "length_add", "length_del"};
 
 int state = CONFIG_EFFECT;
 bool event_triggered = true;
@@ -276,12 +276,12 @@ void myClickFunction() {
         color_code = ws2812fx.color_wheel(config.color);
         ws2812fx.setColor(color_code);
     }
-    else if ( state == CONFIG_LED_ADD )
+    else if ( state == CONFIG_LENGTH_ADD )
     {
         // Increase Length
         ws2812fx.increaseLength(1);
     }
-    else if ( state == CONFIG_LED_DEL )
+    else if ( state == CONFIG_LENGTH_DEL )
     {
         // Decrease Length
         ws2812fx.decreaseLength(1);
@@ -320,12 +320,12 @@ void myDoubleClickFunction() {
         color_code = ws2812fx.color_wheel(config.color);
         ws2812fx.setColor(color_code);
     }
-    else if ( state == CONFIG_LED_ADD )
+    else if ( state == CONFIG_LENGTH_ADD )
     {
         // Increase Length + 10
         ws2812fx.increaseLength(COUNT_STEP);
     }
-    else if ( state == CONFIG_LED_DEL )
+    else if ( state == CONFIG_LENGTH_DEL )
     {
         // Decrease Length + 10
         ws2812fx.decreaseLength(COUNT_STEP);
