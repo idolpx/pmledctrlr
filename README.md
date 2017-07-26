@@ -53,7 +53,9 @@ I needed a small LED controller for lighting up a project.  I designed this to h
  1|[470 ohm 1/4w metal film resistor](https://www.aliexpress.com/wholesale?SearchText=470+ohm+1%2F4w+resistor+metal+film)
  1|[100k ohm 1/4w metal film resistor](https://www.aliexpress.com/wholesale?SearchText=100k+ohm+1%2F4w+resistor+metal+film)
 
+## Wiring
 
+(To Do)
 
 
  I used the really awesome [WS2812FX](https://github.com/kitesurfer1404/WS2812FX) and [OneButton](https://github.com/mathertel/OneButton) libraries with a few adjustments.
