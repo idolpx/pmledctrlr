@@ -49,6 +49,9 @@ I needed a small LED controller for lighting up a project.  I designed this to h
  2|[18650 Single Battery Holder with Wire Leads](https://www.aliexpress.com/wholesale?SearchText=18650+Single+Battery+Holder+Wire)
   1|[6x6x5MM 4PIN G90 Tactile Tact Push Button Micro Switch](https://www.aliexpress.com/wholesale?SearchText=6x6x5MM+4PIN+G90+Tactile+Push+Button+Micro+Switch) (Configuration Switch)
  1|[8.5mm x 8.5mm Tactile Power Micro Switch Self Lock On/Off](https://www.aliexpress.com/wholesale?SearchText=8.5mm+push+on+push+off+switch+tactile+power+micro) (Power Switch)
+ 1|[1000uf 10v Electrolytic Capacitor](https://www.aliexpress.com/wholesale?SearchText=1000uf+10v+electrolytic+capacitor)
+ 1|[470 ohm 1/4w metal film resistor](https://www.aliexpress.com/wholesale?SearchText=470+ohm+1%2F4w+resistor+metal+film)
+ 1|[100k ohm 1/4w metal film resistor](https://www.aliexpress.com/wholesale?SearchText=100k+ohm+1%2F4w+resistor+metal+film)
 
 
 
