@@ -252,7 +252,7 @@ void myLongPressStopFunction() {
 void myClickFunction() {
     if ( state == CONFIG_EFFECT )
     {
-        // Increase Animation Mode
+        // Next Effect
         ws2812fx.setMode((ws2812fx.getMode() + 1) % ws2812fx.getModeCount());
     }
     else if ( state == CONFIG_BRIGHTNESS )
@@ -294,7 +294,7 @@ void myClickFunction() {
 void myDoubleClickFunction() {
     if ( state == CONFIG_EFFECT )
     {
-        // Decrease Animation Mode
+        // Previous Effect
         ws2812fx.setMode((ws2812fx.getMode() - 1) % ws2812fx.getModeCount());
     }
     else if ( state == CONFIG_BRIGHTNESS )
