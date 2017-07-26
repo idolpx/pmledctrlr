@@ -188,7 +188,7 @@ uint8_t WS2812FX::getBrightness(void) {
   return _brightness;
 }
 
-uint8_t WS2812FX::getLEDCount(void) {
+uint8_t WS2812FX::getLength(void) {
   return _led_count;
 }
 

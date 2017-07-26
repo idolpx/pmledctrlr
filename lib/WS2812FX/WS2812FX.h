@@ -261,7 +261,7 @@ class WS2812FX : public Adafruit_NeoPixel {
       getSpeed(void),
       getBrightness(void),
       getModeCount(void),
-      getLEDCount(void);
+      getLength(void);
 
     uint32_t
       color_wheel(uint8_t),

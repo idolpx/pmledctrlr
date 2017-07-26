@@ -164,7 +164,7 @@ void loop() {
 
         config.brightness = ws2812fx.getBrightness();
         config.speed = ws2812fx.getSpeed();
-        config.length = ws2812fx.getLEDCount();
+        config.length = ws2812fx.getLength();
 
         SerialPrintf("brightness: %d, speed: %d, color: %d, length: %d\n\n",
                         config.brightness,
