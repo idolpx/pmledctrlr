@@ -35,34 +35,6 @@
 #include <OneButton.h>
 #include <WS2812FX.h>
 
-#include <avr/pgmspace.h>
-
-#define SerialPrintf(fmt, ...) _SerialPrintf(PSTR(fmt), ##__VA_ARGS__)
-
-extern "C" {
-    int serialputc(char c, FILE *fp)
-    {
-        if(c == '\n')
-            Serial.write('\r');
-
-        Serial.write(c);
-
-        return 0;
-    }
-}
-
-void _SerialPrintf(const char *fmt, ...)
-{
-    FILE stdiostr;
-    va_list ap;
-
-    fdev_setup_stream(&stdiostr, serialputc, NULL, _FDEV_SETUP_WRITE);
-
-    va_start(ap, fmt);
-    vfprintf_P(&stdiostr, fmt, ap);
-    va_end(ap);
-}
-
 #define LED_PIN 10                       // 0 = GPIO0, 2=GPIO2
 #define STATE_PIN 13
 
@@ -81,7 +53,14 @@ void _SerialPrintf(const char *fmt, ...)
 #define CONFIG_LENGTH_ADD 4
 #define CONFIG_LENGTH_DEL 5
 
-char *stateName[] = { "effect", "brightness",  "speed", "color", "length_add", "length_del"};
+const char *stateName[] = {
+        "effect",
+        "brightness",
+        "speed",
+        "color",
+        "length_add",
+        "length_del"
+    };
 
 int state = CONFIG_EFFECT;
 bool event_triggered = true;
@@ -114,9 +93,10 @@ void setup(){
     Serial.println();
 
     loadSettings();
-    SerialPrintf("PMLEDCTRLR v%s\n", config.version);
+    Serial.print(F("PMLEDCTRLR v"));
+    Serial.println(config.version);
 
-    Serial.println("Controls setup");
+    Serial.println(F("Controls setup"));
     // enable the standard led on pin 13.
     pinMode(STATE_PIN, OUTPUT);      // sets the digital pin as output
 
@@ -133,7 +113,7 @@ void setup(){
     // set 80 msec. debouncing time. Default is 50 msec.
     button.setDebounceTicks(80);
 
-    Serial.println("WS2812FX setup");
+    Serial.println(F("WS2812FX setup"));
     ws2812fx.init();
     ws2812fx.setMode(config.effect);
     ws2812fx.setBrightness(config.brightness);
@@ -141,9 +121,9 @@ void setup(){
     ws2812fx.setColor(config.color);
     ws2812fx.start();
 
-    SerialPrintf("Ready!\n\n");
+    Serial.println(F("Ready!"));
+    Serial.println();
 }
-
 
 void loop() {
     //unsigned long now = millis();
@@ -154,24 +134,48 @@ void loop() {
     // report event
     if ( event_triggered ) {
         config.effect = ws2812fx.getMode();
-        SerialPrintf("state: %d, [%s]\teffect: %d, [%s]\tpressed_ticks: %d\n",
-                        state+1,
-                        stateName[state],
-                        config.effect,
-                        ws2812fx.getModeName(config.effect),
-                        button.getPressedTicks()
-                    );
+//        String modeName = ws2812fx.getModeName(config.effect);
+//        SerialPrintf("state: %d, [%s]\teffect: %d, [%s]\tpressed_ticks: %d\n",
+//                        state+1,
+//                        stateName[state],
+//                        config.effect,
+//                        modeName.c_str(),
+//                        button.getPressedTicks()
+//                    );
+        Serial.print(F("state: "));
+        Serial.print(state+1);
+        Serial.print(F(", ["));
+        Serial.print(stateName[state]);
+        Serial.print(F("] effect: "));
+        Serial.print(config.effect);
+        Serial.print(F(", ["));
+        Serial.print(ws2812fx.getModeName(config.effect));
+        Serial.print(F("] pressed_ticks: "));
+        Serial.println(button.getPressedTicks());
 
         config.brightness = ws2812fx.getBrightness();
         config.speed = ws2812fx.getSpeed();
         config.length = ws2812fx.getLength();
 
-        SerialPrintf("brightness: %d, speed: %d, color: %d, length: %d\n\n",
-                        config.brightness,
-                        config.speed,
-                        config.color,
-                        config.length
-                    );
+//        SerialPrintf("brightness: %d, speed: %d, color: %d, length: %u\nfree memory: %d\n\n",
+//                        config.brightness,
+//                        config.speed,
+//                        config.color,
+//                        config.length,
+//                        availableMemory()
+//                    );
+        Serial.print(F("brightness: "));
+        Serial.print(config.brightness);
+        Serial.print(F(", speed: "));
+        Serial.print(config.speed);
+        Serial.print(F(", color: "));
+        Serial.print(config.color);
+        Serial.print(F(", length: "));
+        Serial.println(config.length);
+
+        Serial.print(F("free memory: "));
+        Serial.println(availableMemory());
+        Serial.println();
 
         event_triggered = false;
 
@@ -224,7 +228,7 @@ void loadSettings() {
 }
 
 void saveSettings() {
-    SerialPrintf("event: save_settings\n");
+    Serial.println(F("event: save_settings"));
 
     for (unsigned int t=0; t<sizeof(config); t++)
         EEPROM.write(CONFIG_START + t, *((char*)&config + t));
@@ -238,13 +242,13 @@ void myLongPressStartFunction() {
     if ( state > 5 )
         state = 0;
 
-    SerialPrintf("event: long_press_start\n");
+    Serial.println(F("event: long_press_start"));
     event_triggered = true;
     event_blink = 200;
 }
 
 void myLongPressStopFunction() {
-    SerialPrintf("event: long_press_stop\n");
+    Serial.println(F("event: long_press_stop"));
     event_triggered = true;
 }
 
@@ -285,7 +289,7 @@ void myClickFunction() {
         ws2812fx.decreaseLength(1);
     }
 
-    SerialPrintf("event: click\n");
+    Serial.println(F("event: click"));
     event_triggered = true;
 } // myClickFunction
 
@@ -327,6 +331,12 @@ void myDoubleClickFunction() {
         ws2812fx.decreaseLength(COUNT_STEP);
     }
 
-    SerialPrintf("event: double_click\n");
+    Serial.println(F("event: double_click"));
     event_triggered = true;
 } // myDoubleClickFunction
+
+int availableMemory() {
+    extern int __heap_start, *__brkval;
+    int v;
+    return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+}
