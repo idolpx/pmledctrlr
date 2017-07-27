@@ -58,7 +58,7 @@ I needed a small LED controller for lighting up a project.  I designed this to h
 (To Do)
 
 
- I used the really awesome [WS2812FX](https://github.com/kitesurfer1404/WS2812FX) and [OneButton](https://github.com/mathertel/OneButton) libraries with a few adjustments.
+ I used the really awesome [Adafruit NeoPixel library](https://github.com/adafruit/Adafruit_NeoPixel), [WS2812FX](https://github.com/kitesurfer1404/WS2812FX) and [OneButton](https://github.com/mathertel/OneButton) libraries with a few adjustments.
 
  Effects
 -------
