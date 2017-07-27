@@ -134,14 +134,7 @@ void loop() {
     // report event
     if ( event_triggered ) {
         config.effect = ws2812fx.getMode();
-//        String modeName = ws2812fx.getModeName(config.effect);
-//        SerialPrintf("state: %d, [%s]\teffect: %d, [%s]\tpressed_ticks: %d\n",
-//                        state+1,
-//                        stateName[state],
-//                        config.effect,
-//                        modeName.c_str(),
-//                        button.getPressedTicks()
-//                    );
+
         Serial.print(F("state: "));
         Serial.print(state+1);
         Serial.print(F(", ["));
@@ -157,13 +150,6 @@ void loop() {
         config.speed = ws2812fx.getSpeed();
         config.length = ws2812fx.getLength();
 
-//        SerialPrintf("brightness: %d, speed: %d, color: %d, length: %u\nfree memory: %d\n\n",
-//                        config.brightness,
-//                        config.speed,
-//                        config.color,
-//                        config.length,
-//                        availableMemory()
-//                    );
         Serial.print(F("brightness: "));
         Serial.print(config.brightness);
         Serial.print(F(", speed: "));
